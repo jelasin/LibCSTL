@@ -52,3 +52,15 @@ int main(int argc, char const *argv[])
 
     return 0;
 }
+
+// ➜  list git:(master) ✗ gcc example.c list.c -o list 
+// ➜  list git:(master) ✗ ./list            
+// value: 3
+// value: 2
+// value: 1
+// value: 3
+// value: 1
+// value: 3
+// value: 1
+// value: 2
+// list is empty
