@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.c": "c",
+        "slist.h": "c",
+        "link_list.h": "c",
+        "linked_list.h": "c",
+        "list.h": "c",
+        "stdio.h": "c"
+    }
+}
