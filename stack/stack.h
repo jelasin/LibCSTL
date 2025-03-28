@@ -20,7 +20,7 @@ extern void stack_init_head(stack_head *head);
 // 入栈操作
 extern void stack_push(stack_node *node, stack_head *head);
 // 出栈操作
-extern stack_node *stack_pop(stack_head *head);
+extern void* stack_pop(stack_head *head);
 // 判断栈是否为空
 extern int stack_empty(const stack_head *head);
 

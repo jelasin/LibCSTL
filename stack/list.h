@@ -3,7 +3,7 @@
 
 #ifndef offsetof
 // 获取结构体成员偏移，因为常量指针的值为0，即可以看作结构体首地址为0
-#define offsetof(TYPE,MEMBER)((unsigned int)&((TYPE *)0)->MEMBER)
+#define offsetof(TYPE,MEMBER)((size_t)&((TYPE *)0)->MEMBER)
 #endif
 
 #ifndef container_of
