@@ -3,6 +3,7 @@
 
 struct example
 {
+    // 为了简化操作, 请将stack_node作为第一个成员变量
     stack_node node;
     int data;
 };
