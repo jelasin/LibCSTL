@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 struct example {
-    // 将其命名在第一个位置，我们需要进行强制转换来获取结构体的地址
+    // 为了简化操作, 请将queue_node定义为第一个成员变量
     queue_node node;
     int data;
 };

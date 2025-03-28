@@ -3,30 +3,9 @@
 
 #include "list.h"
 
-#ifndef offsetof
-// 获取结构体成员偏移，因为常量指针的值为0，即可以看作结构体首地址为0
-#define offsetof(TYPE,MEMBER)((size_t)&((TYPE *)0)->MEMBER)
-#endif
-
-#ifndef container_of
-/*ptr 成员指针
-* type 结构体 比如struct Stu
-* member 成员变量，跟指针对应
-* */
-// 最后一句的意义就是，取结构体某个成员member的地址，减去这个成员在结构体type中的偏移，运算结果就是结构体type的首地址
-#define container_of(ptr, type, member) ({          \
-        const typeof( ((type *)0)->member ) *__mptr = (const typeof( ((type *)0)->member ) *)(ptr); \
-        (type *)( (char *)__mptr - offsetof(type,member) );})
-#endif
-
-#ifndef list_entry
-// 获取结构体指针的成员变量地址
-#define list_entry(ptr, type, member) \
-    container_of(ptr, type, member)
-#endif
-
 #ifndef queue_entry
 // 获取队列节点的结构体指针
+typedef unsigned long size_t;
 #define queue_entry(ptr, type, member) \
     container_of(ptr, type, member)
 #endif

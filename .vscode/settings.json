@@ -19,6 +19,8 @@
         "queue.h": "c",
         "cmath": "c",
         "string": "c",
-        "string_view": "c"
+        "string_view": "c",
+        "stack.h": "c",
+        "initializer_list": "c"
     }
 }

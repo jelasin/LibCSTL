@@ -1,5 +1,4 @@
 #include "queue.h"
-#include <stdio.h>
 
 // 初始化队列头
 void queue_init_head(queue_head *head)
@@ -16,9 +15,9 @@ void* queue_dequeue(queue_head *head)
 {
     if (queue_is_empty(head))
     {
-        perror("queue is empty");
-        return NULL;
+        return (void*)0;
     }
+
     queue_node *node = queue_entry((queue_node*)head->list.prev, queue_node, list);
     list_del(&node->list);
 
