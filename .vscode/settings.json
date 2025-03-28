@@ -5,6 +5,18 @@
         "link_list.h": "c",
         "linked_list.h": "c",
         "list.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "list": "c",
+        "system_error": "c",
+        "array": "c",
+        "functional": "c",
+        "tuple": "c",
+        "type_traits": "c",
+        "utility": "c",
+        "numbers": "c",
+        "random": "cpp",
+        "compare": "c",
+        "queue.h": "c",
+        "cmath": "c"
     }
 }

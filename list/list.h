@@ -17,28 +17,39 @@
         (type *)( (char *)__mptr - offsetof(type,member) );})
 #endif
 
+#ifndef list_entry
 // 获取结构体指针的成员变量地址
 #define list_entry(ptr, type, member) \
     container_of(ptr, type, member)
+#endif
 
 struct list_head {
     struct list_head *next, *prev;
 };
 
+typedef struct list_head list_head;
+typedef struct list_head list_node;
+
 // 初始化链表头
-void init_list_head(struct list_head *list);
+extern void init_list_head(list_head *list);
+
+// 插入节点到当前节点之前
+extern void list_add_prev(list_node *node, list_node *cur);
+
+// 插入节点到当前节点之后
+extern void list_add_next(list_node *node, list_node *cur);
 
 // 链表头插入元素
-void list_add(struct list_head *new, struct list_head *head);
+extern void list_add_head(list_node *node, list_head *head);
 
 // 链表尾插入元素
-void list_add_tail(struct list_head *new, struct list_head *head);
+extern void list_add_tail(list_node *node, list_head *head);
 
 // 链表删除元素
-void list_del(struct list_head *entry);
+extern void list_del(list_node *node);
 
 // 链表判断是否为空
-int list_empty(const struct list_head *head);
+extern int list_empty(const list_head *head);
 
 // 链表遍历
 // 只进行遍历,不进行危险操作.
@@ -53,6 +64,5 @@ int list_empty(const struct list_head *head);
          next = list_entry(pos->member.next, typeof(*pos), member);  \
          &pos->member != (head);                                 \
          pos = next, next = list_entry(next->member.next, typeof(*next), member))
-
 
 #endif // __LIST_H__

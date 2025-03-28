@@ -5,7 +5,7 @@
 static void* LIST_POSTION1 = (void*)0xdeadbeef;
 static void* LIST_POSTION2 = (void*)0xdeadbeef;
 
-static void __list_add(struct list_head *new, struct list_head *prev, struct list_head *next)
+static void __list_add(list_node *new, list_node *prev, list_node *next)
 {
     next->prev = new;
     new->next = next;
@@ -13,40 +13,52 @@ static void __list_add(struct list_head *new, struct list_head *prev, struct lis
     prev->next = new;
 }
 
-static void __list_del(struct list_head *entry)
+static void __list_del(list_node *node)
 {
-    entry->next->prev = entry->prev;
-    entry->prev->next = entry->next;
+    node->next->prev = node->prev;
+    node->prev->next = node->next;
 }
 
 // 初始化链表头
-void init_list_head(struct list_head *list)
+void init_list_head(list_head *list)
 {
     list->next = list->prev = list;
 }
 
-// 链表头插入元素
-void list_add(struct list_head *new, struct list_head *head)
+// 插入节点到当前节点之前
+void list_add_prev(list_node *node, list_node *cur)
 {
-    __list_add(new, head, head->next);
+    __list_add(node, cur->prev, cur);
+}
+
+// 插入节点到当前节点之后
+void list_add_next(list_node *node, list_node *cur)
+{
+    __list_add(node, cur, cur->next);
+}
+
+// 链表头插入元素
+void list_add_head(list_node *node, list_head *head)
+{
+    __list_add(node, head, head->next);
 }
 
 // 链表尾插入元素
-void list_add_tail(struct list_head *new, struct list_head *head)
+void list_add_tail(list_node *node, list_head *head)
 {
-    __list_add(new, head->prev, head);
+    __list_add(node, head->prev, head);
 }
 
 // 链表删除元素
-void list_del(struct list_head *entry)
+void list_del(list_node *node)
 {
-    __list_del(entry);
-    entry->next = LIST_POSTION1;
-    entry->prev = LIST_POSTION2;
+    __list_del(node);
+    node->next = LIST_POSTION1;
+    node->prev = LIST_POSTION2;
 }
 
 // 链表判断是否为空
-int list_empty(const struct list_head *head)
+int list_empty(const list_head *head)
 {
     return head->next == head;
 }
