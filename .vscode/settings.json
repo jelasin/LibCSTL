@@ -17,6 +17,8 @@
         "random": "cpp",
         "compare": "c",
         "queue.h": "c",
-        "cmath": "c"
+        "cmath": "c",
+        "string": "c",
+        "string_view": "c"
     }
 }

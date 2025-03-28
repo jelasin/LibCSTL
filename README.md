@@ -18,7 +18,7 @@ xxx.c
 
 - [x] list : 双向链表
 - [x] queue : 队列 ==> depand on list
-- [x] stack : 栈
+- [ ] stack : 栈
 - [ ] priority_queue : 优先队列
 - [ ] set : 集合
 - [ ] map : 映射

@@ -1,10 +1,12 @@
 #include "list.h"
 #include <stdio.h>
 
-struct example
-{
-    int value;
+struct example {
+    /* 建议你把list_node放在结构体的第一个位置, 虽然这对于链表结构来说并不是必要的. 
+    *  但是对于其他数据结构, 为了方便对其进行管理和操作,我们有这样约定俗成的规则. 
+    */
     list_node list;
+    int value;
 };
 
 int main(int argc, char const *argv[])
