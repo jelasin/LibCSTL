@@ -21,6 +21,16 @@
         "string": "c",
         "string_view": "c",
         "stack.h": "c",
-        "initializer_list": "c"
+        "initializer_list": "c",
+        "priority_queue.h": "c",
+        "dequeue.h": "c",
+        "hlist.h": "c",
+        "stdlib.h": "c",
+        "string.h": "c",
+        "bit": "c",
+        "cstddef": "c",
+        "limits": "c",
+        "memory": "c",
+        "new": "c"
     }
 }

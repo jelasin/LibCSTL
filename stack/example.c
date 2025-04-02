@@ -23,11 +23,14 @@ int main(int argc, char const *argv[])
     stack_push(&e2.node, &head);
     stack_push(&e3.node, &head);
 
+    
     struct example *e;
+    e = (typeof(e))stack_top(&head);
+    printf("top: %d\n", e->data);
     while(!stack_empty(&head))
     {
         e = (typeof(e))stack_pop(&head);
-        printf("%d\n", e->data);
+        printf("pop: %d\n", e->data);
     }
     return 0;
 }

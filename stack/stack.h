@@ -23,7 +23,8 @@ extern void stack_push(stack_node *node, stack_head *head);
 extern void* stack_pop(stack_head *head);
 // 判断栈是否为空
 extern int stack_empty(const stack_head *head);
-
+// 查看栈顶元素
+extern void* stack_top(const stack_head *head);
 
 
 #endif /* __STACK_H__ */

@@ -1,6 +1,6 @@
 # C STL库
 
-打算重写以前学习数据结构时写的[代码](https://jelasin.github.io/2025/01/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8F%8A%E7%AE%97%E6%B3%95/)，原版代码的扩展性并不好，实用性也不强。参考`Linux内核`的一些数据结构设计了`C STL`库，里面包含了一些扩展性和移植性较好的数据结构和算法，相较于原版代码，去除了不实用的功能，精简代码，最大程度还原数据结构本质功能, 扩展性强。相较于内核，去除了static inline等这种比较消耗内存的设计, 增加了更多的错误处理。
+打算重写以前学习数据结构时写的[代码](https://jelasin.github.io/2025/01/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8F%8A%E7%AE%97%E6%B3%95/)，原版代码的扩展性并不好，实用性也不强。参考`Linux内核`的一些优秀数据结构和算法设计了`C STL`库，里面包含了一些扩展性和移植性较好的数据结构和算法，相较于原版代码，去除了不实用的功能，精简代码，最大程度还原数据结构本质功能, 扩展性强。相较于内核，没有大量使用static inline, 增加了更多的错误处理。
 
 ## 目录结构
 
@@ -16,10 +16,22 @@ xxx.c
 
 ## development
 
-- [x] list : 双向链表
-- [x] queue : 队列 ==> depand on list
-- [x] stack : 栈 ==> depand on list
+### 数据结构
+
+- [x] list : 双向链表.
+- [x] hlist : 哈希链表.
+- [x] queue : 队列, 需要依赖 list.
+- [x] deque : 双端队列, 需要依赖 list.
+- [x] stack : 栈, 需要依赖 list.
+- [x] priority_queue : 优先队列, 基于二叉堆数组实现.
+- [ ] splay_tree : 伸展树
+- [ ] avl_tree : 平衡二叉树
+- [ ] rb_tree : 红黑树
+- [ ] b_tree : B树
 - [ ] set : 集合
 - [ ] map : 映射
-- [ ] priority_queue : 优先队列
-  
+- [ ] lru_list : lru链表, 依赖于hlist和list.
+
+### 算法
+
+- [x] quick_sort : 快速排序.

@@ -27,3 +27,13 @@ int stack_empty(const stack_head *head)
 {
     return head->list.next == &head->list;
 }
+// 获取栈顶元素
+void* stack_top(const stack_head *head)
+{
+    if (stack_empty(head))
+    {
+        return (void*)0;
+    }
+    stack_node *node = stack_entry((stack_node*)head->list.next, stack_node, list);
+    return (void*)node;
+}
