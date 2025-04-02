@@ -34,4 +34,6 @@ xxx.c
 
 ### 算法
 
-- [ ] quick_sort : 快速排序.
+- [x] sort : 智能排序算法.
+- [ ] hash : 哈希算法.
+- [ ] crypto : 加密算法.

@@ -31,6 +31,14 @@
         "cstddef": "c",
         "limits": "c",
         "memory": "c",
-        "new": "c"
+        "new": "c",
+        "sort.h": "c",
+        "stddef.h": "c",
+        "algorithm": "c",
+        "deque": "c",
+        "unordered_map": "c",
+        "vector": "c",
+        "time.h": "c",
+        "stdbool.h": "c"
     }
 }
