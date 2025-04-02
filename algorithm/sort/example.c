@@ -5,18 +5,21 @@
 #include <stdlib.h>
 
 // 整数比较函数
-int compare_int(const void *a, const void *b, void *context) {
+int compare_int(const void *a, const void *b, void *context) 
+{
     // 升序排序
     return *(const int*)a - *(const int*)b;
 }
 
 // 字符串比较函数
-int compare_string(const void *a, const void *b, void *context) {
+int compare_string(const void *a, const void *b, void *context) 
+{
     return strcmp(*(const char**)a, *(const char**)b);
 }
 
 // 根据数据特性选择排序算法的自定义选择器
-sort_algorithm_t custom_algorithm_selector(size_t num, size_t size) {
+sort_algorithm_t custom_algorithm_selector(size_t num, size_t size) 
+{
     // 小数据量使用插入排序
     if (num <= 20) {
         return SORT_INSERTION;
@@ -32,17 +35,20 @@ sort_algorithm_t custom_algorithm_selector(size_t num, size_t size) {
 }
 
 // 测试各种排序算法的性能
-void benchmark_sort_algorithms(int *data, size_t size) {
+void benchmark_sort_algorithms(int *data, size_t size) 
+{
     // 为每个算法准备一份数据副本
     int *arrays[SORT_COUNT];
-    for (int i = 0; i < SORT_COUNT; i++) {
+    for (int i = 0; i < SORT_COUNT; i++) 
+    {
         if (i == SORT_AUTO) continue; // 跳过AUTO
         arrays[i] = malloc(size * sizeof(int));
         memcpy(arrays[i], data, size * sizeof(int));
     }
     
     // 测试每种排序算法
-    for (int algorithm = SORT_BUBBLE; algorithm < SORT_COUNT; algorithm++) {
+    for (int algorithm = SORT_BUBBLE; algorithm < SORT_COUNT; algorithm++) 
+    {
         clock_t start = clock();
         
         sort(arrays[algorithm], size, sizeof(int), compare_int, NULL, algorithm);
@@ -54,13 +60,15 @@ void benchmark_sort_algorithms(int *data, size_t size) {
     }
     
     // 释放内存
-    for (int i = 0; i < SORT_COUNT; i++) {
+    for (int i = 0; i < SORT_COUNT; i++) 
+    {
         if (i == SORT_AUTO) continue;
         free(arrays[i]);
     }
 }
 
-int main() {
+int main() 
+{
     // 设置自定义算法选择器, 如果不设置则使用默认选择器
     set_algorithm_selector(custom_algorithm_selector);
     
@@ -69,7 +77,8 @@ int main() {
     int count = sizeof(numbers) / sizeof(numbers[0]);
     
     printf("排序前: ");
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < count; i++) 
+    {
         printf("%d ", numbers[i]);
     }
     printf("\n");
@@ -81,7 +90,8 @@ int main() {
     sort(numbers, count, sizeof(int), compare_int, NULL, SORT_AUTO);
     
     printf("排序后: ");
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < count; i++) 
+    {
         printf("%d ", numbers[i]);
     }
     printf("\n\n");
@@ -92,7 +102,8 @@ int main() {
     count = sizeof(strings) / sizeof(strings[0]);
     
     printf("排序前: ");
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < count; i++) 
+    {
         printf("%s ", strings[i]);
     }
     printf("\n");
@@ -104,7 +115,8 @@ int main() {
     sort(strings, count, sizeof(char*), compare_string, NULL, SORT_AUTO);
     
     printf("排序后: ");
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < count; i++) 
+    {
         printf("%s ", strings[i]);
     }
     printf("\n\n");
@@ -116,7 +128,8 @@ int main() {
     
     // 生成随机数据
     srand(time(NULL));
-    for (int i = 0; i < test_size; i++) {
+    for (int i = 0; i < test_size; i++) 
+    {
         large_array[i] = rand() % 100000;
     }
     

@@ -12,17 +12,20 @@ struct person {
 };
 
 // 简单的哈希函数
-static unsigned int hash_func(int key) {
+static unsigned int hash_func(int key) 
+{
     return key % HASH_SIZE;
 }
 
-int main() {
+int main() 
+{
     // 创建哈希表
     hlist_head hash_table[HASH_SIZE];
     int i;
     
     // 初始化哈希表头
-    for (i = 0; i < HASH_SIZE; i++) {
+    for (i = 0; i < HASH_SIZE; i++) 
+    {
         hlist_init_head(&hash_table[i]);
     }
     
@@ -39,15 +42,18 @@ int main() {
     hlist_add_head(&p4.node, &hash_table[hash_func(p4.id)]);
     
     printf("哈希表内容:\n");
-    for (i = 0; i < HASH_SIZE; i++) {
+    for (i = 0; i < HASH_SIZE; i++) 
+    {
         printf("桶 %d: ", i);
-        if (hlist_empty(&hash_table[i])) {
+        if (hlist_empty(&hash_table[i])) 
+        {
             printf("空\n");
             continue;
         }
         
         struct person *pos;
-        hlist_for_each_entry(pos, &hash_table[i], node) {
+        hlist_for_each_entry(pos, &hash_table[i], node) 
+        {
             printf("(%d, %s) ", pos->id, pos->name);
         }
         printf("\n");
@@ -59,34 +65,42 @@ int main() {
     struct person *found = NULL;
     struct person *pos;
     
-    hlist_for_each_entry(pos, &hash_table[hash], node) {
-        if (pos->id == id_to_find) {
+    hlist_for_each_entry(pos, &hash_table[hash], node) 
+    {
+        if (pos->id == id_to_find) 
+        {
             found = pos;
             break;
         }
     }
     
-    if (found) {
+    if (found) 
+    {
         printf("\n找到: ID=%d, Name=%s\n", found->id, found->name);
         
         // 删除找到的节点
         printf("删除 ID=%d\n", found->id);
         hlist_del(&found->node);
-    } else {
+    } 
+    else 
+    {
         printf("\nID=%d 未找到\n", id_to_find);
     }
     
     // 再次打印哈希表内容
     printf("\n删除后的哈希表内容:\n");
-    for (i = 0; i < HASH_SIZE; i++) {
+    for (i = 0; i < HASH_SIZE; i++) 
+    {
         printf("桶 %d: ", i);
-        if (hlist_empty(&hash_table[i])) {
+        if (hlist_empty(&hash_table[i])) 
+        {
             printf("空\n");
             continue;
         }
         
         struct person *pos;
-        hlist_for_each_entry(pos, &hash_table[i], node) {
+        hlist_for_each_entry(pos, &hash_table[i], node) 
+        {
             printf("(%d, %s) ", pos->id, pos->name);
         }
         printf("\n");
