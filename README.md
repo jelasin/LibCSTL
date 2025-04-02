@@ -34,4 +34,4 @@ xxx.c
 
 ### 算法
 
-- [x] quick_sort : 快速排序.
+- [ ] quick_sort : 快速排序.

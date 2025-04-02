@@ -78,16 +78,20 @@ pq_t* pq_create(size_t initial_capacity, pq_type_t type,
 // 销毁优先队列
 void pq_destroy(pq_t *pq) 
 {
-    if (pq) {
+    if (pq) 
+    {
         free(pq->array);
+        pq->array = NULL;
         free(pq);
+        pq = NULL;
     }
 }
 
 // 清空优先队列
 void pq_clear(pq_t *pq) 
 {
-    if (pq) {
+    if (pq) 
+    {
         pq->size = 0;
     }
 }
@@ -95,10 +99,16 @@ void pq_clear(pq_t *pq)
 // 调整队列的容量
 int pq_reserve(pq_t *pq, size_t new_capacity) 
 {
-    if (!pq || new_capacity < pq->size) return -1;
+    if (!pq || new_capacity < pq->size) 
+    {
+        return -1;
+    }
     
     void **new_array = (void**)realloc(pq->array, new_capacity * sizeof(void*));
-    if (!new_array) return -1;
+    if (!new_array) 
+    {
+        return -1;
+    }
     
     pq->array = new_array;
     pq->capacity = new_capacity;
@@ -108,13 +118,15 @@ int pq_reserve(pq_t *pq, size_t new_capacity)
 // 上浮操作
 void pq_sift_up(pq_t *pq, size_t index) 
 {
-    while (index > 0) {
+    while (index > 0) 
+    {
         size_t p = parent_index(index);
         
         // 如果当前节点比父节点优先级低，则停止上浮
         if (pq->compare(pq->array[index], pq->array[p], pq->compare_arg) <= 0)
+        {
             break;
-        
+        }
         // 交换并继续上浮
         swap(pq->array, index, p);
         index = p;
@@ -126,7 +138,8 @@ void pq_sift_down(pq_t *pq, size_t index)
 {
     size_t size = pq->size;
     
-    while (1) {
+    while (1) 
+    {
         size_t left = left_child_index(index);
         size_t right = right_child_index(index);
         size_t largest = index;
@@ -134,15 +147,20 @@ void pq_sift_down(pq_t *pq, size_t index)
         // 找出当前节点、左子节点和右子节点中优先级最高的
         if (left < size && 
             pq->compare(pq->array[left], pq->array[largest], pq->compare_arg) > 0)
+        {
             largest = left;
+        }
         
         if (right < size && 
             pq->compare(pq->array[right], pq->array[largest], pq->compare_arg) > 0)
+        {
             largest = right;
-        
+        }
         // 如果当前节点已经是最高优先级，则停止下沉
         if (largest == index)
+        {
             break;
+        }
         
         // 交换并继续下沉
         swap(pq->array, index, largest);
@@ -153,13 +171,19 @@ void pq_sift_down(pq_t *pq, size_t index)
 // 入队 (添加元素)
 int pq_push(pq_t *pq, void *data) 
 {
-    if (!pq) return -1;
+    if (!pq) 
+    {
+        return -1;
+    }
     
     // 如果队列已满，扩容
-    if (pq->size >= pq->capacity) {
+    if (pq->size >= pq->capacity) 
+    {
         size_t new_capacity = pq->capacity * PQ_RESIZE_FACTOR;
         if (pq_reserve(pq, new_capacity) != 0)
+        {
             return -1;
+        }
     }
     
     // 将新元素添加到末尾
@@ -174,7 +198,10 @@ int pq_push(pq_t *pq, void *data)
 // 出队 (删除堆顶元素并返回)
 void* pq_pop(pq_t *pq) 
 {
-    if (!pq || pq->size == 0) return NULL;
+    if (!pq || pq->size == 0) 
+    {
+        return NULL;
+    }
     
     // 保存堆顶元素
     void *top = pq->array[0];
@@ -184,15 +211,21 @@ void* pq_pop(pq_t *pq)
     
     // 如果堆不为空，则下沉
     if (pq->size > 0)
+    {
         pq_sift_down(pq, 0);
-    
+    }
+
     return top;
 }
 
 // 查看堆顶元素
 void* pq_top(const pq_t *pq) 
 {
-    if (!pq || pq->size == 0) return NULL;
+    if (!pq || pq->size == 0) 
+    {
+        return NULL;
+    }
+
     return pq->array[0];
 }
 
