@@ -33,10 +33,24 @@ xxx.c
 v1 版本内存消耗小, 效率高, 封装差, 需要在自己的结构体内定义 node.
 v2 版本内存消耗比v1大(8字节左右), 封装好, 操作简单, 无需定义 node, 且支持自定义等操作.
 
+#### v1
+
 - [x] queue : 单调队列, 需要依赖 list.
 - [x] deque : 双端队列, 需要依赖 list.
 - [x] stack : 单调栈, 需要依赖 list.
 - [x] priority_queue : 优先队列, 基于二叉堆数组实现.
+- [ ] list : 双向链表, 需要以来list.
+- [ ] set : 集合, 需要依赖 rb_tree.
+- [ ] map : 映射, 需要依赖 rb_tree.
+- [ ] vector : 向量, 需要依赖 list.
+- [ ] string : 字符串, 需要依赖 list.
+
+#### v2
+
+- [ ] queue : 单调队列, 需要依赖 list.
+- [ ] deque : 双端队列, 需要依赖 list.
+- [x] stack : 单调栈, 需要依赖 list.
+- [ ] priority_queue : 优先队列, 基于二叉堆数组实现.
 - [ ] list : 双向链表, 需要以来list.
 - [ ] set : 集合, 需要依赖 rb_tree.
 - [ ] map : 映射, 需要依赖 rb_tree.
