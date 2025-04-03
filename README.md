@@ -16,24 +16,36 @@ xxx.c
 
 ## development
 
-### 数据结构
+### 底层数据结构
 
 - [x] list : 双向链表.
 - [x] hlist : 哈希链表.
-- [x] queue : 队列, 需要依赖 list.
+- [x] lru_list : lru链表, 依赖于hlist和list.
+- [x] splay_tree : 伸展树.
+- [x] avl_tree : 平衡二叉树.
+- [x] rb_tree : 红黑树.
+- [x] b_tree : B树.
+
+### 上层容器实现
+
+#### v1 vs v2
+
+v1 版本内存消耗小, 效率高, 封装差, 需要在自己的结构体内定义 node.
+v2 版本内存消耗比v1大(8字节左右), 封装好, 操作简单, 无需定义 node, 且支持自定义等操作.
+
+- [x] queue : 单调队列, 需要依赖 list.
 - [x] deque : 双端队列, 需要依赖 list.
-- [x] stack : 栈, 需要依赖 list.
+- [x] stack_v1 : 单调栈, 需要依赖 list.
+- [x] stack_v2 : 单调栈, 需要依赖 list.
 - [x] priority_queue : 优先队列, 基于二叉堆数组实现.
-- [ ] splay_tree : 伸展树
-- [ ] avl_tree : 平衡二叉树
-- [ ] rb_tree : 红黑树
-- [ ] b_tree : B树
-- [ ] set : 集合
-- [ ] map : 映射
-- [ ] lru_list : lru链表, 依赖于hlist和list.
+- [ ] list : 双向链表, 需要以来list.
+- [ ] set : 集合, 需要依赖 rb_tree.
+- [ ] map : 映射, 需要依赖 rb_tree.
+- [ ] vector : 向量, 需要依赖 list.
+- [ ] string : 字符串, 需要依赖 list.
 
 ### 算法
 
 - [x] sort : 智能排序算法.
-- [ ] hash : 哈希算法.
-- [ ] crypto : 加密算法.
+- [ ] hash : 哈希算法库.
+- [ ] crypto : 加密算法库.

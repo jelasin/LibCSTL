@@ -1,12 +1,8 @@
 {
     "files.associations": {
         "*.c": "c",
-        "slist.h": "c",
-        "link_list.h": "c",
-        "linked_list.h": "c",
-        "list.h": "c",
+        "BaseStruct/list/list.h": "c",
         "stdio.h": "c",
-        "list": "c",
         "system_error": "c",
         "array": "c",
         "functional": "c",
@@ -24,7 +20,7 @@
         "initializer_list": "c",
         "priority_queue.h": "c",
         "dequeue.h": "c",
-        "hlist.h": "c",
+        "BaseStruct/hlist/hlist.h": "c",
         "stdlib.h": "c",
         "string.h": "c",
         "bit": "c",
@@ -39,6 +35,14 @@
         "unordered_map": "c",
         "vector": "c",
         "time.h": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "splay_tree.h": "c",
+        "avl_tree.h": "c",
+        "lru_list.h": "c",
+        "*.tcc": "c",
+        "b_tree.h": "c",
+        "rb_tree.h": "c",
+        "concepts": "c",
+        "list.h": "c"
     }
 }
