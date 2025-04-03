@@ -35,8 +35,7 @@ v2 版本内存消耗比v1大(8字节左右), 封装好, 操作简单, 无需定
 
 - [x] queue : 单调队列, 需要依赖 list.
 - [x] deque : 双端队列, 需要依赖 list.
-- [x] stack_v1 : 单调栈, 需要依赖 list.
-- [x] stack_v2 : 单调栈, 需要依赖 list.
+- [x] stack : 单调栈, 需要依赖 list.
 - [x] priority_queue : 优先队列, 基于二叉堆数组实现.
 - [ ] list : 双向链表, 需要以来list.
 - [ ] set : 集合, 需要依赖 rb_tree.
