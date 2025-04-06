@@ -28,34 +28,42 @@ xxx.c
 
 ### 上层容器实现
 
-#### v1 vs v2
-
-v1 版本内存消耗小, 效率高, 封装差, 需要在自己的结构体内定义 node.
-v2 版本内存消耗比v1大(8字节左右), 封装好, 操作简单, 无需定义 node, 且支持自定义等操作.
-
 #### v1
 
+v1 设计十分简洁.包含一些基础的数据结构, 可以根据自己的需求进行扩展.
+
+- [x] list : 双向链表, 同底层数据结构list.
+- [x] hlist : 哈希链表, 同底层数据结构hlist.
 - [x] queue : 单调队列, 需要依赖 list.
 - [x] deque : 双端队列, 需要依赖 list.
 - [x] stack : 单调栈, 需要依赖 list.
-- [x] priority_queue : 优先队列, 基于二叉堆数组实现.
-- [ ] list : 双向链表, 需要以来list.
-- [ ] set : 集合, 需要依赖 rb_tree.
-- [ ] map : 映射, 需要依赖 rb_tree.
-- [ ] vector : 向量, 需要依赖 list.
-- [ ] string : 字符串, 需要依赖 list.
 
 #### v2
 
+v2 设计实现更加丰富, 接口更多, 可以进行自定义操作.
+支持 malloc_hook 和 free_hook, 可以进行自定义内存管理.
+
+- [x] priority_queue : 优先队列, 基于二叉堆数组实现.
+- [x] ring_queue : 环形队列.
+- [ ] stack : 单调栈, 需要依赖 list.
 - [ ] queue : 单调队列, 需要依赖 list.
 - [ ] deque : 双端队列, 需要依赖 list.
-- [x] stack : 单调栈, 需要依赖 list.
-- [ ] priority_queue : 优先队列, 基于二叉堆数组实现.
 - [ ] list : 双向链表, 需要以来list.
 - [ ] set : 集合, 需要依赖 rb_tree.
 - [ ] map : 映射, 需要依赖 rb_tree.
 - [ ] vector : 向量, 需要依赖 list.
 - [ ] string : 字符串, 需要依赖 list.
+
+#### v3
+
+v3 设计实现更加复杂一些的数据结构, 包括常用的线程池, 内存池,  进程池, 协程库等设计, 可以进行自定义操作.
+这些项目大部分都有独立的仓库, 可以单独使用.
+
+- [x] [LibCoroutine](https://github.com/jelasin/LibCoroutine) : 协程库.
+- [ ] LibThreadPool : 线程池.
+- [ ] LibMemoryPool : 内存池.
+- [ ] LibProcessPool : 进程池.
+- [ ] LibSRF : 共享环形队列(POSIX IPC).
 
 ### 算法
 

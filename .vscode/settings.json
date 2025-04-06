@@ -43,6 +43,14 @@
         "b_tree.h": "c",
         "rb_tree.h": "c",
         "concepts": "c",
-        "list.h": "c"
+        "list.h": "c",
+        "ring_queue.h": "c",
+        "assert.h": "c",
+        "typeinfo": "c",
+        "co_control.h": "c",
+        "ucontext.h": "c",
+        "co_types.h": "c",
+        "co_scheduler.h": "c",
+        "coroutine.h": "c"
     }
 }
