@@ -51,6 +51,7 @@
         "ucontext.h": "c",
         "co_types.h": "c",
         "co_scheduler.h": "c",
-        "coroutine.h": "c"
+        "coroutine.h": "c",
+        "hlist.h": "c"
     }
 }

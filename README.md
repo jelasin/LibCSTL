@@ -30,7 +30,7 @@ xxx.c
 
 #### v1
 
-v1 设计十分简洁.包含一些基础的数据结构, 可以根据自己的需求进行扩展.
+v1 设计十分简洁, 内存占用小, 包含一些基础的数据结构, 可以根据自己的需求进行扩展.
 
 - [x] list : 双向链表, 同底层数据结构list.
 - [x] hlist : 哈希链表, 同底层数据结构hlist.
@@ -53,17 +53,6 @@ v2 设计实现更加丰富, 接口更多, 可以进行自定义操作.
 - [ ] map : 映射, 需要依赖 rb_tree.
 - [ ] vector : 向量, 需要依赖 list.
 - [ ] string : 字符串, 需要依赖 list.
-
-#### v3
-
-v3 设计实现更加复杂一些的数据结构, 包括常用的线程池, 内存池,  进程池, 协程库等设计, 可以进行自定义操作.
-这些项目大部分都有独立的仓库, 可以单独使用.
-
-- [x] [LibCoroutine](https://github.com/jelasin/LibCoroutine) : 协程库.
-- [ ] LibThreadPool : 线程池.
-- [ ] LibMemoryPool : 内存池.
-- [ ] LibProcessPool : 进程池.
-- [ ] LibSRF : 共享环形队列(POSIX IPC).
 
 ### 算法
 
