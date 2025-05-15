@@ -45,10 +45,11 @@ v2 设计实现更加丰富, 接口更多, 可以进行自定义操作.
 
 - [x] priority_queue : 优先队列, 基于二叉堆数组实现.
 - [x] ring_queue : 环形队列.
+- [ ] hashmap : 哈希表, 需要依赖 hlist/rb_tree.
 - [ ] stack : 单调栈, 需要依赖 list.
 - [ ] queue : 单调队列, 需要依赖 list.
 - [ ] deque : 双端队列, 需要依赖 list.
-- [ ] list : 双向链表, 需要以来list.
+- [ ] list : 双向链表, 需要依赖 list.
 - [ ] set : 集合, 需要依赖 rb_tree.
 - [ ] map : 映射, 需要依赖 rb_tree.
 - [ ] vector : 向量, 需要依赖 list.

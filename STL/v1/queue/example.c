@@ -17,9 +17,9 @@ int main(int argc, char const *argv[])
     e2.data = 2;
     e3.data = 3;
 
-    queue_enqueue(&e1.node, &q);
-    queue_enqueue(&e2.node, &q);
-    queue_enqueue(&e3.node, &q);
+    queue_enqueue(&q, &e1.node);
+    queue_enqueue(&q, &e2.node);
+    queue_enqueue(&q, &e3.node);
 
     struct example *e;
     while ((e = (typeof(e))queue_dequeue(&q)) != NULL) {

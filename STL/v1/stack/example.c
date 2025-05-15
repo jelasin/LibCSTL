@@ -8,7 +8,6 @@ struct example
     int data;
 };
 
-
 int main(int argc, char const *argv[])
 {
     stack_head head;
