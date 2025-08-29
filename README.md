@@ -26,23 +26,13 @@ xxx.c
 - [x] rb_tree : 红黑树.
 - [x] b_tree : B树.
 
-### 上层容器实现
-
-#### v1
-
-v1 设计十分简洁, 内存占用小, 包含一些基础的数据结构, 可以根据自己的需求进行扩展.
+### 上层数据结构实现
 
 - [x] list : 双向链表, 同底层数据结构list.
 - [x] hlist : 哈希链表, 同底层数据结构hlist.
 - [x] queue : 单调队列, 需要依赖 list.
 - [x] deque : 双端队列, 需要依赖 list.
 - [x] stack : 单调栈, 需要依赖 list.
-
-#### v2
-
-v2 设计实现更加丰富, 接口更多, 可以进行自定义操作.
-支持 malloc_hook 和 free_hook, 可以进行自定义内存管理.
-
 - [x] priority_queue : 优先队列, 基于二叉堆数组实现.
 - [x] ring_queue : 环形队列.
 - [x] hashmap : 哈希表, 需要依赖 hlist/rb_tree.
