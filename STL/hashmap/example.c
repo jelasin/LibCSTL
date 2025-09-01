@@ -7,7 +7,7 @@ bool print_entry(const void *key, size_t key_size,
                 void *value, size_t value_size,
                 void *user_data) {
     printf("键: %s, 值: %d\n", (const char *)key, *(int *)value);
-    return true;
+    return 1;
 }
 
 int main() {

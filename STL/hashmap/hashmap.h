@@ -3,7 +3,6 @@
 
 #include "rb_tree.h"
 #include <stdlib.h>
-#include <stdbool.h>
 
 /**
  * 哈希映射状态码

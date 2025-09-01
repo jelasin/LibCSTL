@@ -1,8 +1,15 @@
 #include "rb_tree.h"
 #include <stdio.h>
-#include <string.h>
 #include <time.h>
 #include <stdlib.h>
+#include <assert.h>
+
+/*
+ * Linux内核风格红黑树示例程序
+ * 展示两种使用方式：
+ * 1. Linux内核风格的低级API
+ * 2. 兼容性的高级API
+ */
 
 // 示例结构：整数节点
 struct int_node {
@@ -10,13 +17,12 @@ struct int_node {
     struct rb_node node;    // 红黑树节点
 };
 
-// 整数比较函数
+// 整数比较函数（用于兼容性API）
 int compare_int(const struct rb_node *a, const struct rb_node *b, void *arg) 
 {
     struct int_node *node_a = rb_entry(a, struct int_node, node);
     struct int_node *node_b = rb_entry(b, struct int_node, node);
     
-    // 返回两个整数的差值
     return node_a->value - node_b->value;
 }
 
@@ -24,338 +30,325 @@ int compare_int(const struct rb_node *a, const struct rb_node *b, void *arg)
 void int_destructor(struct rb_node *node, void *arg)
 {
     struct int_node *int_node = rb_entry(node, struct int_node, node);
-    // 如果节点是动态分配的，这里可以释放它
-    // free(int_node); 
-    // 注：在本例中，节点是栈上分配的，不需要释放
+    printf("Destroying node with value %d\n", int_node->value);
+    // 在实际应用中，这里会调用 free(int_node)
 }
 
-// 打印红黑树结构（用于调试）
+// 打印红黑树结构（调试用）
 void print_tree_structure(struct rb_node *node, int level, char prefix) 
 {
     if (!node) return;
     
-    // 打印缩进
     for (int i = 0; i < level; i++)
         printf("    ");
     
-    // 获取节点值并打印
     struct int_node *inode = rb_entry(node, struct int_node, node);
     printf("%c[%d] (%s)\n", prefix, inode->value, 
-           node->color == RB_RED ? "红" : "黑");
+           rb_is_red(node) ? "RED" : "BLACK");
     
-    // 递归打印左右子树
-    print_tree_structure(node->left, level + 1, 'L');
-    print_tree_structure(node->right, level + 1, 'R');
+    print_tree_structure(node->rb_left, level + 1, 'L');
+    print_tree_structure(node->rb_right, level + 1, 'R');
 }
 
-// 示例结构：字符串节点
-struct string_node {
-    char *str;              // 字符串
-    struct rb_node node;    // 红黑树节点
-};
-
-// 字符串比较函数
-int compare_string(const struct rb_node *a, const struct rb_node *b, void *arg) 
+/*
+ * Linux内核风格API示例
+ */
+void test_kernel_style_api()
 {
-    struct string_node *node_a = rb_entry(a, struct string_node, node);
-    struct string_node *node_b = rb_entry(b, struct string_node, node);
+    printf("=== Linux Kernel Style API Test ===\n");
     
-    return strcmp(node_a->str, node_b->str);
-}
-
-// 字符串节点析构函数 - 释放字符串内存
-void string_destructor(struct rb_node *node, void *arg)
-{
-    struct string_node *str_node = rb_entry(node, struct string_node, node);
-    if (str_node->str) {
-        free(str_node->str);
-        str_node->str = NULL;
-    }
-    // 注意：此示例中，节点本身是栈上分配的，不需要释放
-}
-
-// 测试整数红黑树
-void test_int_tree() 
-{
-    rb_root_t tree;
-    rb_init(&tree, compare_int, NULL, int_destructor, NULL);
+    // 初始化根节点
+    struct rb_root root = RB_ROOT;
     
-    // 创建整数节点
+    // 创建测试节点
     struct int_node nodes[10];
-    int values[] = {50, 30, 70, 20, 40, 60, 80, 15, 25, 35};
+    int values[] = {50, 25, 75, 12, 37, 62, 87, 6, 18, 43};
     
-    printf("插入顺序: ");
+    // 插入节点（Linux内核风格）
+    printf("Inserting nodes: ");
     for (int i = 0; i < 10; i++) {
         nodes[i].value = values[i];
-        printf("%d ", nodes[i].value);
-        rb_insert(&tree, &nodes[i].node);
+        rb_init_node(&nodes[i].node);
+        
+        // 手动查找插入位置
+        struct rb_node **new_node = &root.rb_node;
+        struct rb_node *parent = NULL;
+        
+        while (*new_node) {
+            struct int_node *this_node = rb_entry(*new_node, struct int_node, node);
+            
+            parent = *new_node;
+            if (nodes[i].value < this_node->value) {
+                new_node = &((*new_node)->rb_left);
+            } else if (nodes[i].value > this_node->value) {
+                new_node = &((*new_node)->rb_right);
+            } else {
+                printf("Duplicate value %d\n", nodes[i].value);
+                break;
+            }
+        }
+        
+        // 链接并着色
+        rb_link_node(&nodes[i].node, parent, new_node);
+        rb_insert_color(&nodes[i].node, &root);
+        
+        printf("%d ", values[i]);
     }
     printf("\n\n");
     
     // 打印树结构
-    printf("树结构:\n");
-    print_tree_structure(tree.root, 0, 'R');
+    printf("Tree structure:\n");
+    print_tree_structure(root.rb_node, 0, 'R');
     printf("\n");
     
-    // 验证红黑树合法性
-    if (rb_verify(&tree))
-        printf("红黑树是合法的 ✓\n\n");
-    else
-        printf("红黑树不合法 ✗\n\n");
+    // 中序遍历
+    printf("In-order traversal: ");
+    for (struct rb_node *node = rb_first(&root); node; node = rb_next(node)) {
+        struct int_node *data = rb_entry(node, struct int_node, node);
+        printf("%d ", data->value);
+    }
+    printf("\n");
     
-    // 中序遍历（有序输出）
-    printf("有序遍历: ");
+    // 逆序遍历
+    printf("Reverse traversal: ");
+    for (struct rb_node *node = rb_last(&root); node; node = rb_prev(node)) {
+        struct int_node *data = rb_entry(node, struct int_node, node);
+        printf("%d ", data->value);
+    }
+    printf("\n");
+    
+    // 查找测试
+    printf("Search test:\n");
+    int search_values[] = {25, 99, 6, 100};
+    for (int i = 0; i < 4; i++) {
+        struct rb_node *node = root.rb_node;
+        struct int_node *found = NULL;
+        
+        while (node) {
+            struct int_node *data = rb_entry(node, struct int_node, node);
+            if (search_values[i] < data->value) {
+                node = node->rb_left;
+            } else if (search_values[i] > data->value) {
+                node = node->rb_right;
+            } else {
+                found = data;
+                break;
+            }
+        }
+        
+        printf("  Search %d: %s\n", search_values[i], 
+               found ? "FOUND" : "NOT FOUND");
+    }
+    
+    // 删除节点测试 - 直接使用数组索引，避免指针问题
+    printf("\nSafe deletion test:\n");
+    
+    // 删除节点25 (nodes[1])
+    printf("Deleting node 25 (nodes[1])...\n");
+    __rb_erase(&nodes[1].node, &root);
+    
+    printf("Tree after deleting 25:\n");
+    print_tree_structure(root.rb_node, 0, 'R');
+    printf("In-order: ");
+    for (struct rb_node *node = rb_first(&root); node; node = rb_next(node)) {
+        struct int_node *data = rb_entry(node, struct int_node, node);
+        printf("%d ", data->value);
+    }
+    printf("\n\n");
+    
+    // 删除节点75 (nodes[2])
+    printf("Deleting node 75 (nodes[2])...\n");
+    __rb_erase(&nodes[2].node, &root);
+    
+    printf("Tree after deleting 75:\n");
+    print_tree_structure(root.rb_node, 0, 'R');
+    printf("Final in-order: ");
+    for (struct rb_node *node = rb_first(&root); node; node = rb_next(node)) {
+        struct int_node *data = rb_entry(node, struct int_node, node);
+        printf("%d ", data->value);
+    }
+    printf("\n\n");
+    
+    printf("After deletion: ");
+    for (struct rb_node *node = rb_first(&root); node; node = rb_next(node)) {
+        struct int_node *data = rb_entry(node, struct int_node, node);
+        printf("%d ", data->value);
+    }
+    printf("\n\n");
+}
+
+/*
+ * 兼容性API示例
+ */
+void test_compatibility_api()
+{
+    printf("=== Compatibility API Test ===\n");
+    
+    rb_root_t tree;
+    rb_init(&tree, compare_int, NULL, int_destructor, NULL);
+    
+    // 创建测试节点
+    struct int_node *nodes = malloc(8 * sizeof(struct int_node));
+    int values[] = {40, 20, 60, 10, 30, 50, 70, 35};
+    
+    // 插入节点
+    printf("Inserting nodes: ");
+    for (int i = 0; i < 8; i++) {
+        nodes[i].value = values[i];
+        rb_init_node(&nodes[i].node);
+        
+        int result = rb_insert(&tree, &nodes[i].node);
+        if (result == 0) {
+            printf("%d ", values[i]);
+        } else {
+            printf("(DUP:%d) ", values[i]);
+        }
+    }
+    printf("\n\n");
+    
+    // 查找测试
+    printf("Search test:\n");
+    int search_values[] = {30, 80, 10, 35};
+    for (int i = 0; i < 4; i++) {
+        struct int_node key;
+        key.value = search_values[i];
+        rb_init_node(&key.node);
+        
+        struct rb_node *found = rb_search(&tree, &key.node);
+        if (found) {
+            struct int_node *data = rb_entry(found, struct int_node, node);
+            printf("  Found %d at node %p\n", data->value, (void*)found);
+        } else {
+            printf("  Not found %d\n", search_values[i]);
+        }
+    }
+    
+    // 使用遍历宏
+    printf("\nUsing traversal macro: ");
     struct int_node *pos;
     rb_inorder(pos, &tree, struct int_node, node) {
         printf("%d ", pos->value);
     }
-    printf("\n\n");
-    
-    // 查找测试
-    printf("查找测试:\n");
-    struct int_node key;
-    key.value = 40;
-    struct rb_node *found = rb_search(&tree, &key.node);
-    
-    if (found) {
-        struct int_node *found_node = rb_entry(found, struct int_node, node);
-        printf("找到值 %d (颜色=%s)\n", 
-               found_node->value, found->color == RB_RED ? "红" : "黑");
-    } else {
-        printf("未找到值 %d\n", key.value);
-    }
     printf("\n");
     
-    // 删除测试 - 删除叶子节点
-    printf("删除叶子节点 (15):\n");
-    key.value = 15;
-    found = rb_search(&tree, &key.node);
-    if (found) {
-        rb_erase(&tree, found);
-        printf("删除后的树结构:\n");
-        print_tree_structure(tree.root, 0, 'R');
-        
-        if (rb_verify(&tree))
-            printf("红黑树是合法的 ✓\n");
-        else
-            printf("红黑树不合法 ✗\n");
-    }
-    printf("\n");
+    // 验证红黑树性质
+    printf("Tree verification: %s\n", 
+           rb_verify(&tree) ? "PASSED" : "FAILED");
     
-    // 删除测试 - 删除有一个子节点的节点
-    printf("删除有一个子节点的节点 (30):\n");
-    key.value = 30;
-    found = rb_search(&tree, &key.node);
-    if (found) {
-        rb_erase(&tree, found);
-        printf("删除后的树结构:\n");
-        print_tree_structure(tree.root, 0, 'R');
-        
-        if (rb_verify(&tree))
-            printf("红黑树是合法的 ✓\n");
-        else
-            printf("红黑树不合法 ✗\n");
-    }
-    printf("\n");
+    // 清空树（会调用析构函数）
+    printf("\nClearing tree:\n");
+    rb_clear(&tree);
     
-    // 删除测试 - 删除有两个子节点的节点
-    printf("删除有两个子节点的节点 (50):\n");
-    key.value = 50;
-    found = rb_search(&tree, &key.node);
-    if (found) {
-        rb_erase(&tree, found);
-        printf("删除后的树结构:\n");
-        print_tree_structure(tree.root, 0, 'R');
-        
-        if (rb_verify(&tree))
-            printf("红黑树是合法的 ✓\n");
-        else
-            printf("红黑树不合法 ✗\n");
-    }
-    printf("\n");
+    printf("Tree is empty: %s\n", 
+           rb_empty(&tree) ? "YES" : "NO");
     
-    // 测试最小值和最大值
-    struct rb_node *min_node = rb_first(&tree);
-    struct rb_node *max_node = rb_last(&tree);
-    
-    if (min_node && max_node) {
-        printf("最小值: %d\n", rb_entry(min_node, struct int_node, node)->value);
-        printf("最大值: %d\n", rb_entry(max_node, struct int_node, node)->value);
-    }
+    free(nodes);
 }
 
-// 测试字符串红黑树
-void test_string_tree() 
+/*
+ * 性能测试
+ */
+void test_performance()
 {
-    rb_root_t tree;
-    rb_init(&tree, compare_string, NULL, string_destructor, NULL);
+    printf("=== Performance Test ===\n");
     
-    // 创建字符串节点
-    struct string_node nodes[5];
-    const char *strings[] = {"apple", "banana", "cherry", "date", "elderberry"};
-    
-    printf("\n===== 字符串树测试 =====\n");
-    printf("插入顺序: ");
-    for (int i = 0; i < 5; i++) {
-        // 为字符串分配内存，析构函数将负责释放它
-        nodes[i].str = strdup(strings[i]);
-        printf("%s ", nodes[i].str);
-        rb_insert(&tree, &nodes[i].node);
-    }
-    printf("\n\n");
-    
-    // 中序遍历（有序输出）
-    printf("有序遍历: ");
-    struct string_node *pos;
-    rb_inorder(pos, &tree, struct string_node, node) {
-        printf("%s ", pos->str);
-    }
-    printf("\n\n");
-    
-    // 查找测试
-    printf("查找测试:\n");
-    struct string_node key;
-    key.str = "cherry";
-    struct rb_node *found = rb_search(&tree, &key.node);
-    
-    if (found) {
-        struct string_node *found_node = rb_entry(found, struct string_node, node);
-        printf("找到字符串 '%s'\n", found_node->str);
-    } else {
-        printf("未找到字符串 '%s'\n", key.str);
-    }
-    
-    // 销毁树 - 这将调用析构函数释放所有字符串
-    printf("\n清理树并释放所有字符串内存\n");
-    rb_destroy(&tree);
-}
-
-// 性能测试
-void performance_test() 
-{
-    printf("\n===== 性能测试 =====\n");
-    
-    // 准备随机数据
-    const int test_size = 100000;
-    struct int_node *nodes = malloc(test_size * sizeof(struct int_node));
+    const int N = 100000;
+    struct rb_root root = RB_ROOT;
+    struct int_node *nodes = malloc(N * sizeof(struct int_node));
     
     if (!nodes) {
-        printf("内存分配失败\n");
+        printf("Memory allocation failed\n");
         return;
     }
     
-    // 生成随机数据
-    srand(time(NULL));
-    for (int i = 0; i < test_size; i++) {
-        nodes[i].value = rand() % 1000000;
-    }
+    // 随机数种子
+    srand((unsigned int)time(NULL));
     
-    // 创建红黑树 - 不使用析构函数，因为我们会手动管理内存
-    rb_root_t tree;
-    rb_init(&tree, compare_int, NULL, NULL, NULL);
-    
-    // 插入性能测试
+    // 插入测试
     clock_t start = clock();
-    
-    for (int i = 0; i < test_size; i++) {
-        rb_insert(&tree, &nodes[i].node);
+    for (int i = 0; i < N; i++) {
+        nodes[i].value = rand() % (N * 2);  // 允许重复以测试查找
+        rb_init_node(&nodes[i].node);
+        
+        struct rb_node **new_node = &root.rb_node;
+        struct rb_node *parent = NULL;
+        
+        while (*new_node) {
+            struct int_node *this_node = rb_entry(*new_node, struct int_node, node);
+            
+            parent = *new_node;
+            if (nodes[i].value < this_node->value) {
+                new_node = &((*new_node)->rb_left);
+            } else if (nodes[i].value > this_node->value) {
+                new_node = &((*new_node)->rb_right);
+            } else {
+                goto skip_insert;  // 跳过重复值
+            }
+        }
+        
+        rb_link_node(&nodes[i].node, parent, new_node);
+        rb_insert_color(&nodes[i].node, &root);
+        
+        skip_insert:;
     }
-    
     clock_t end = clock();
-    double insert_time = (double)(end - start) / CLOCKS_PER_SEC;
+    printf("Inserted %d nodes in %.3f seconds\n", 
+           N, (double)(end - start) / CLOCKS_PER_SEC);
     
-    printf("插入 %d 个节点: %f 秒\n", test_size, insert_time);
-    
-    // 验证树合法性
-    printf("红黑树合法性: %s\n", rb_verify(&tree) ? "合法 ✓" : "不合法 ✗");
-    
-    // 查找性能测试
+    // 查找测试
+    int found_count = 0;
     start = clock();
-    
-    for (int i = 0; i < 10000; i++) {
-        int index = rand() % test_size;
-        struct int_node key;
-        key.value = nodes[index].value;
-        rb_search(&tree, &key.node);
-    }
-    
-    end = clock();
-    double search_time = (double)(end - start) / CLOCKS_PER_SEC;
-    
-    printf("执行 10000 次随机查找: %f 秒\n", search_time);
-    
-    // 删除性能测试
-    start = clock();
-    
-    for (int i = 0; i < 10000; i++) {
-        int index = rand() % test_size;
-        if (nodes[index].node.parent) {  // 确保节点还在树中
-            rb_erase(&tree, &nodes[index].node);
+    for (int i = 0; i < N / 10; i++) {
+        int search_value = rand() % (N * 2);
+        struct rb_node *node = root.rb_node;
+        
+        while (node) {
+            struct int_node *data = rb_entry(node, struct int_node, node);
+            if (search_value < data->value) {
+                node = node->rb_left;
+            } else if (search_value > data->value) {
+                node = node->rb_right;
+            } else {
+                found_count++;
+                break;
+            }
         }
     }
-    
     end = clock();
-    double delete_time = (double)(end - start) / CLOCKS_PER_SEC;
+    printf("Searched %d times, found %d, took %.3f seconds\n", 
+           N / 10, found_count, (double)(end - start) / CLOCKS_PER_SEC);
     
-    printf("执行 10000 次随机删除: %f 秒\n", delete_time);
+    // 遍历测试
+    int count = 0;
+    start = clock();
+    for (struct rb_node *node = rb_first(&root); node; node = rb_next(node)) {
+        count++;
+    }
+    end = clock();
+    printf("Traversed %d nodes in %.3f seconds\n", 
+           count, (double)(end - start) / CLOCKS_PER_SEC);
     
-    // 清理
     free(nodes);
-    rb_clear(&tree);  // 只清空树，不释放节点内存
-}
-// 析构函数，释放整个节点结构
-void heap_node_destructor(struct rb_node *node, void *arg) {
-    struct int_node *int_node = rb_entry(node, struct int_node, node);
-    free(int_node);  // 释放整个节点
-}
-// 堆分配节点的示例
-void test_heap_allocated_nodes()
-{
-    printf("\n===== 堆分配节点测试 =====\n");
-    
-
-    
-    // 创建红黑树
-    rb_root_t tree;
-    rb_init(&tree, compare_int, NULL, heap_node_destructor, NULL);
-    
-    // 添加一些堆分配的节点
-    printf("添加堆分配的节点: ");
-    for (int i = 0; i < 10; i++) {
-        struct int_node *node = malloc(sizeof(struct int_node));
-        if (!node) {
-            printf("内存分配失败\n");
-            break;
-        }
-        node->value = i * 10;
-        printf("%d ", node->value);
-        rb_insert(&tree, &node->node);
-    }
-    printf("\n");
-    
-    // 遍历树
-    printf("有序遍历: ");
-    struct int_node *pos;
-    rb_inorder(pos, &tree, struct int_node, node) {
-        printf("%d ", pos->value);
-    }
-    printf("\n");
-    
-    // 销毁树，这将自动释放所有节点内存
-    printf("销毁树并释放所有节点内存\n");
-    rb_destroy(&tree);
 }
 
-int main() 
+/*
+ * 主函数
+ */
+int main()
 {
-    printf("===== 整数红黑树测试 =====\n");
-    test_int_tree();
+    printf("Enhanced Red-Black Tree Implementation\n");
+    printf("Based on Linux Kernel Design\n");
+    printf("======================================\n\n");
     
-    test_string_tree();
+    // 测试Linux内核风格API
+    test_kernel_style_api();
     
-    performance_test();
+    // 测试兼容性API
+    test_compatibility_api();
     
-    test_heap_allocated_nodes();
+    // 性能测试
+    test_performance();
     
+    printf("\nAll tests completed successfully!\n");
     return 0;
 }

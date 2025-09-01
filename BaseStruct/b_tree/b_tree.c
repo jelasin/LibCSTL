@@ -1,5 +1,4 @@
 #include "b_tree.h"
-#include <stdio.h>
 #include <string.h>
 
 // 函数声明 - 应添加在文件开头
@@ -273,7 +272,7 @@ int btree_insert(btree_t *tree, void *key) {
     
     // 如果树为空，创建根节点
     if (!tree->root) {
-        tree->root = create_node(tree->t, true);
+        tree->root = create_node(tree->t, 1);
         if (!tree->root) return -1;
         
         tree->root->keys[0] = key;
@@ -287,7 +286,7 @@ int btree_insert(btree_t *tree, void *key) {
     
     // 如果根节点已满，需要分裂
     if (tree->root->n == 2*tree->t-1) {
-        struct btree_node *new_root = create_node(tree->t, false);
+        struct btree_node *new_root = create_node(tree->t, 0);
         if (!new_root) return -1;
         
         new_root->children[0] = tree->root;

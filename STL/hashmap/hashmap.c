@@ -1,6 +1,7 @@
 #include "hashmap.h"
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #define HASHMAP_DEFAULT_CAPACITY 16
 #define HASHMAP_DEFAULT_LOAD_FACTOR 0.75f
@@ -239,7 +240,7 @@ static hashmap_status_t hashmap_rehash(hashmap_t *map, size_t new_capacity) {
     
     // 遍历旧桶，重新哈希所有项
     for (size_t i = 0; i < map->capacity; i++) {
-        struct rb_node *node = rb_first(&map->buckets[i]);
+        struct rb_node *node = rb_first(&map->buckets[i].root);
         while (node) {
             // 保存下一个节点
             struct rb_node *next = rb_next(node);
@@ -405,7 +406,7 @@ hashmap_status_t hashmap_remove(hashmap_t *map, const void *key, size_t key_size
 // 检查键是否存在
 bool hashmap_contains(const hashmap_t *map, const void *key, size_t key_size) {
     if (!map || !key) {
-        return false;
+        return 0;
     }
     
     return hashmap_find_entry(map, key, key_size, NULL) != NULL;
@@ -419,7 +420,7 @@ void hashmap_foreach(const hashmap_t *map, hashmap_foreach_fn fn, void *user_dat
     
     // 遍历所有桶
     for (size_t i = 0; i < map->capacity; i++) {
-        struct rb_node *node = rb_first(&map->buckets[i]);
+        struct rb_node *node = rb_first(&map->buckets[i].root);
         while (node) {
             hashmap_entry_t *entry = rb_entry(node, hashmap_entry_t, rb_node);
             node = rb_next(node); // 先保存下一个节点，因为回调可能导致当前节点被删除

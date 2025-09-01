@@ -12,8 +12,8 @@
         fprintf(stderr, "[%s] [%s] " fmt "\n", buf, level, ##__VA_ARGS__); \
     } while (0)
 
-#define ERROR(fmt, args...) LOG(RED"ERROR"NONE, fmt, ##args)
-#define WARN(fmt, args...) LOG(YELLOW"WARN"NONE, fmt, ##args)
+#define ERROR(fmt, args...) LOG(RED "ERROR" NONE, fmt, ##args)
+#define WARN(fmt, args...) LOG(YELLOW "WARN" NONE, fmt, ##args)
 #define INFO(fmt, args...) LOG("INFO", fmt, ##args)
 
 #endif /* __LOG_H__ */

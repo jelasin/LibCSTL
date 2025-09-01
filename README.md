@@ -25,24 +25,45 @@ xxx.c
 - [x] avl_tree : 平衡二叉树.
 - [x] rb_tree : 红黑树.
 - [x] b_tree : B树.
+- [x] radix_tree : 基数树.
 
 ### 上层数据结构实现
 
-- [x] list : 双向链表, 同底层数据结构list.
-- [x] hlist : 哈希链表, 同底层数据结构hlist.
+- [x] list : 双向链表, 同底层数据结构 list.
+- [x] hlist : 哈希链表, 同底层数据结构 hlist.
 - [x] queue : 单调队列, 需要依赖 list.
 - [x] deque : 双端队列, 需要依赖 list.
 - [x] stack : 单调栈, 需要依赖 list.
 - [x] priority_queue : 优先队列, 基于二叉堆数组实现.
 - [x] ring_queue : 环形队列.
-- [x] hashmap : 哈希表, 需要依赖 hlist/rb_tree.
-- [ ] set : 集合, 需要依赖 rb_tree.
-- [ ] map : 映射, 需要依赖 rb_tree.
-- [ ] vector : 向量, 需要依赖 list.
-- [ ] string : 字符串, 需要依赖 list.
+- [x] hashmap : 哈希表, 需要依赖 rb_tree.
 
 ### 算法
 
 - [x] sort : 智能排序算法.
+- - [x] SORT_BUBBLE
+- - [x] SORT_SELECTION
+- - [x] SORT_INSERTION
+- - [x] SORT_QUICK
+- - [x] SORT_MERGE
+- - [x] SORT_HEAP
 - [x] hash : 哈希算法库.
+- - [x] APHash
+- - [x] BKDRHash
+- - [x] DJB2Hash
+- - [x] ELFHash
+- - [x] JSHash
+- - [x] MD5
+- - [x] PJWHash
+- - [x] RSHash
+- - [x] SDBMHash
+- - [x] SimpleHash
 - [ ] crypto : 加密算法库.
+- - [ ] AES
+- - [ ] DES
+- - [ ] DSA
+- - [ ] ECC
+- - [ ] RSA
+- - [ ] RC4
+- - [ ] chacha20
+- - [ ] tee
