@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <assert.h>
-#include "ChaCha20/ChaCha20.h"
+#include "ChaCha20.h"
 
 /**
  * Print hex data for debugging
