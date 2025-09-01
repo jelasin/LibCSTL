@@ -20,23 +20,23 @@ xxx.c
 
 - [x] list : 双向链表.
 - [x] hlist : 哈希链表.
-- [x] lru_list : lru链表, 依赖于hlist和list.
-- [x] splay_tree : 伸展树.
-- [x] avl_tree : 平衡二叉树.
-- [x] rb_tree : 红黑树.
-- [x] b_tree : B树.
-- [x] radix_tree : 基数树.
+- [x] lru_list : lru 链表, 依赖于 hlist 和 list.
+- [x] splay_tree : 伸展树, 支持自定义析构函数.
+- [x] avl_tree : 平衡二叉树, 支持自定义析构函数.
+- [x] rb_tree : 红黑树, 支持自定义析构函数.
+- [x] b_tree : B树, 支持自定义析构函数.
+- [x] radix_tree : 基数树, 支持自定义析构函数.
 
-### 上层数据结构实现
+### 上层数据结构
 
 - [x] list : 双向链表, 同底层数据结构 list.
 - [x] hlist : 哈希链表, 同底层数据结构 hlist.
 - [x] queue : 单调队列, 需要依赖 list.
 - [x] deque : 双端队列, 需要依赖 list.
 - [x] stack : 单调栈, 需要依赖 list.
-- [x] priority_queue : 优先队列, 基于二叉堆数组实现.
-- [x] ring_queue : 环形队列.
-- [x] hashmap : 哈希表, 需要依赖 rb_tree.
+- [x] priority_queue : 优先队列, 支持自定义析构函数, 基于二叉堆数组实现.
+- [x] ring_queue : 环形队列, 支持自定义析构函数.
+- [x] hashmap : 哈希表, 支持自定义析构函数, 需要依赖 rb_tree.
 
 ### 算法
 
@@ -65,5 +65,5 @@ xxx.c
 - - [ ] ECC
 - - [ ] RSA
 - - [ ] RC4
-- - [ ] chacha20
-- - [ ] tee
+- - [ ] ChaCha20
+- - [ ] TEE
