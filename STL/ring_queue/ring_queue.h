@@ -36,7 +36,7 @@ extern void ring_queue_clear(ring_queue_t *queue);
 // 入队操作
 extern ring_queue_status_t ring_queue_enqueue(ring_queue_t *queue, void *element);
 
-// 出队操作
+// 出队操作 （不负责释放元素，用户需用peek记录队首元素，自行选择何时释放）
 extern ring_queue_status_t ring_queue_dequeue(ring_queue_t *queue);
 
 // 查看队首元素但不出队

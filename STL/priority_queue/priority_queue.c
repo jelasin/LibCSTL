@@ -271,7 +271,7 @@ pq_status_t pq_push(pq_t *pq, void *data)
     return PQ_SUCCESS;
 }
 
-// 出队 (删除堆顶元素并返回)
+// 出队
 pq_status_t pq_pop(pq_t *pq) 
 {
     if (!pq) {
@@ -285,10 +285,7 @@ pq_status_t pq_pop(pq_t *pq)
     if (pq_is_empty(pq)) {
         return PQ_EMPTY;
     }
-    
-    // 记录堆顶元素（暂不删除）
-    void *top_element = pq->array[0];
-    
+        
     // 用最后一个元素替换堆顶
     pq->array[0] = pq->array[--pq->size];
     

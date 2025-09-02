@@ -165,9 +165,6 @@ ring_queue_status_t ring_queue_dequeue(ring_queue_t *queue)
         return RING_QUEUE_EMPTY;
     }
     
-    // 获取队首元素（使用普通指针，不是指针的指针）
-    void *element = queue->buffer[queue->head];
-    
     // 更新队首索引
     queue->head = (queue->head + 1) % queue->capacity;
     

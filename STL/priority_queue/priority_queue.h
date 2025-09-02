@@ -31,7 +31,7 @@ typedef struct priority_queue {
     int (*compare)(const void *a, const void *b, void *arg);
     void *compare_arg;   // 比较函数的额外参数
     
-    // 可选的析构函数，用于在出队或清空队列时释放元素
+    // 可选的析构函数，清空队列时释放元素
     void (*element_destructor)(void *element);
 } pq_t;
 
@@ -50,7 +50,7 @@ extern void pq_clear(pq_t *pq);
 // 入队 (添加元素)
 extern pq_status_t pq_push(pq_t *pq, void *data);
 
-// 出队 (删除堆顶元素并返回)
+// 出队 (不负责释放堆顶元素，用户需要使用 pq_peek 记录堆堆顶元素并自行选择何时释放)
 extern pq_status_t pq_pop(pq_t *pq);
 
 // 查看堆顶元素但不移除
