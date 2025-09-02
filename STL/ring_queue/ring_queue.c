@@ -147,7 +147,7 @@ ring_queue_status_t ring_queue_enqueue(ring_queue_t *queue, void *element)
     return RING_QUEUE_SUCCESS;
 }
 
-// 出队操作 (会调用析构函数)
+// 出队操作
 ring_queue_status_t ring_queue_dequeue(ring_queue_t *queue)
 {
     if (!queue) {
@@ -174,11 +174,6 @@ ring_queue_status_t ring_queue_dequeue(ring_queue_t *queue)
     // 更新队列大小和状态
     queue->size--;
     queue->is_full = 0;
-    
-    // 如果有析构函数且数据不为空，调用析构函数
-    if (queue->element_destructor && element) {
-        queue->element_destructor(element);
-    }
     
     return RING_QUEUE_SUCCESS;
 }
