@@ -50,7 +50,7 @@ extern void pq_clear(pq_t *pq);
 // 入队 (添加元素)
 extern pq_status_t pq_push(pq_t *pq, void *data);
 
-// 出队 (删除堆顶元素并返回) - 会调用析构函数
+// 出队 (删除堆顶元素并返回)
 extern pq_status_t pq_pop(pq_t *pq);
 
 // 查看堆顶元素但不移除

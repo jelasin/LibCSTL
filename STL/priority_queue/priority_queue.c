@@ -117,7 +117,7 @@ void pq_destroy(pq_t *pq)
         return;
     }
     
-    // 清空队列，可能会调用析构函数
+    // 清空队列，会调用析构函数
     pq_clear(pq);
     
     // 释放资源
@@ -271,7 +271,7 @@ pq_status_t pq_push(pq_t *pq, void *data)
     return PQ_SUCCESS;
 }
 
-// 出队 (删除堆顶元素并返回) - 会调用析构函数
+// 出队 (删除堆顶元素并返回)
 pq_status_t pq_pop(pq_t *pq) 
 {
     if (!pq) {
@@ -296,12 +296,7 @@ pq_status_t pq_pop(pq_t *pq)
     if (pq->size > 0) {
         pq_sift_down(pq, 0);
     }
-    
-    // 如果有析构函数且堆顶元素不为空，调用析构函数
-    if (pq->element_destructor && top_element) {
-        pq->element_destructor(top_element);
-    }
-    
+        
     return PQ_SUCCESS;
 }
 
