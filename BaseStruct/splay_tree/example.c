@@ -12,6 +12,7 @@ struct int_node {
 // 整数比较函数
 int compare_int(const struct splay_node *a, const struct splay_node *b, void *arg) 
 {
+    (void)arg; // 未使用的比较额外参数
     struct int_node *node_a = splay_entry(a, struct int_node, node);
     struct int_node *node_b = splay_entry(b, struct int_node, node);
     
@@ -21,7 +22,9 @@ int compare_int(const struct splay_node *a, const struct splay_node *b, void *ar
 // 整数节点析构函数
 void int_destructor(struct splay_node *node, void *arg)
 {
+    (void)arg; // 未使用的析构额外参数
     struct int_node *int_node = splay_entry(node, struct int_node, node);
+    (void)int_node; // 示例默认不释放整节点
     // 在本例中节点是栈上分配的，不需要释放
     // 但如果是动态分配的，可以在这里释放
     // free(int_node);
@@ -36,6 +39,7 @@ struct string_node {
 // 字符串比较函数
 int compare_string(const struct splay_node *a, const struct splay_node *b, void *arg) 
 {
+    (void)arg; // 未使用的比较额外参数
     struct string_node *node_a = splay_entry(a, struct string_node, node);
     struct string_node *node_b = splay_entry(b, struct string_node, node);
     
@@ -45,6 +49,7 @@ int compare_string(const struct splay_node *a, const struct splay_node *b, void 
 // 字符串节点析构函数
 void string_destructor(struct splay_node *node, void *arg)
 {
+    (void)arg; // 未使用的析构额外参数
     struct string_node *str_node = splay_entry(node, struct string_node, node);
     if (str_node->str) {
         free(str_node->str);
@@ -165,6 +170,7 @@ void test_string_tree()
 }
 // 析构函数，释放整个节点结构
 void heap_node_destructor(struct splay_node *node, void *arg) {
+    (void)arg; // 未使用的析构额外参数
     struct int_node *int_node = splay_entry(node, struct int_node, node);
     free(int_node); // 释放整个节点结构
 }

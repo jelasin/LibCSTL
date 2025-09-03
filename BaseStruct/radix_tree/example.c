@@ -112,8 +112,8 @@ static void test_strings_basic()
     struct str_item key_abd = { .key = "abd" };
     assert(radix_search_by_leaf(&t, &key_abd.leaf) != NULL);
 
-    // 清空：不析构，叶子 term 应置空
-    radix_clear(&t);
+    // 清空：改为销毁（调用析构释放资源，库负责断开关联）
+    radix_destroy(&t);
     assert(radix_empty(&t));
     for (size_t i = 0; i < n; ++i) assert(items[i]->leaf.term == NULL);
 
@@ -277,7 +277,7 @@ static void test_stress()
     // 清理
     for (int i = 0; i < N; ++i) { if (items[i]) { free(items[i]->key); free(items[i]); } }
     free(items);
-    radix_clear(&t);
+    radix_destroy(&t);
 }
 
 // ============================================================================
@@ -349,7 +349,7 @@ static void test_kernel_style_basic()
     
     printf("Tree height: %u\n", radix_tree_height(&root));
     
-    radix_clear(&root);
+    radix_destroy(&root);
     printf("Kernel style tests passed!\n");
 }
 
@@ -430,7 +430,7 @@ static void test_kernel_style_stress()
         free(values[i]);
     }
     free(values);
-    radix_clear(&root);
+    radix_destroy(&root);
     
     printf("Kernel style stress test passed!\n");
 }

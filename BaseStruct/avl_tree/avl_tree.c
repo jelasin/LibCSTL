@@ -294,9 +294,8 @@ struct avl_node *avl_prev(const struct avl_node *node)
 // 删除节点
 void avl_erase(avl_root_t *tree, struct avl_node *node) 
 {
-    // 保存需要平衡的起点和被删除的节点（用于析构）
+    // 保存需要平衡的起点；侵入式语义：不在此处析构用户节点
     struct avl_node *balance_start = node->parent;
-    struct avl_node *to_destroy = node;
     
     // 处理叶子节点的情况
     if (!node->left && !node->right) {
@@ -395,22 +394,14 @@ void avl_erase(avl_root_t *tree, struct avl_node *node)
         balance_start = balance_start->parent;
     }
     
-    // 如果提供了析构函数，调用它
-    if (tree->node_destructor) {
-        tree->node_destructor(to_destroy, tree->destructor_arg);
-    }
+    // 侵入式语义：不在单点删除中调用析构，由调用者自行释放；
+    // 统一在 avl_destroy 中集中析构
 }
 
 // 判断AVL树是否为空
 int avl_empty(const avl_root_t *tree) 
 {
     return tree->root == NULL;
-}
-
-// 清空AVL树（不释放节点内存）
-void avl_clear(avl_root_t *tree) 
-{
-    tree->root = NULL;
 }
 
 // 递归销毁AVL树节点
@@ -423,6 +414,10 @@ static void destroy_tree_recursive(avl_root_t *tree, struct avl_node *node)
     destroy_tree_recursive(tree, node->left);
     destroy_tree_recursive(tree, node->right);
     
+    // 由库负责断开节点与树的关联，再交给用户析构资源
+    node->left = NULL;
+    node->right = NULL;
+    node->parent = NULL;
     // 如果提供了析构函数，调用它
     if (tree->node_destructor) {
         tree->node_destructor(node, tree->destructor_arg);
@@ -470,14 +465,9 @@ void avl_replace(avl_root_t *tree,
         tree->root = new_node;
     }
     
-    // 清除旧节点的指针
+    // 清除旧节点的指针（不在此处析构，保持侵入式语义）
     old_node->left = NULL;
     old_node->right = NULL;
     old_node->parent = NULL;
     old_node->height = 1;
-    
-    // 如果提供了析构函数，调用它
-    if (tree->node_destructor) {
-        tree->node_destructor(old_node, tree->destructor_arg);
-    }
 }

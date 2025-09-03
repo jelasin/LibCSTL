@@ -181,9 +181,6 @@ extern unsigned int radix_tree_gang_lookup_tag_slot(radix_root_t *root,
 // 是否为空
 extern int radix_empty(const radix_root_t *tree);
 
-// 清空（释放所有内部节点，断开叶子但不调用 leaf_destructor）
-extern void radix_clear(radix_root_t *tree);
-
 // 销毁（释放所有内部节点，并对每个叶子调用 leaf_destructor）
 extern void radix_destroy(radix_root_t *tree);
 

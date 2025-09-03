@@ -112,11 +112,8 @@ static inline void rb_init_node(struct rb_node *rb)
     rb->rb_right = NULL;
 }
 
-// 插入节点（需要手动实现查找位置）
+// 插入节点
 extern void rb_insert_color(struct rb_node *, struct rb_root *);
-
-// 删除节点（低级接口）
-extern void __rb_erase(struct rb_node *, struct rb_root *);
 
 // 查找第一个节点（最小值）
 extern struct rb_node *rb_first(const struct rb_root *);
@@ -137,6 +134,7 @@ extern void rb_replace_node(struct rb_node *victim, struct rb_node *new_node,
 // 后序遍历相关
 extern struct rb_node *rb_first_postorder_cached(const struct rb_root *root,
                                                  struct rb_node **cache);
+
 extern struct rb_node *rb_next_postorder_cached(const struct rb_node *node,
                                                struct rb_node **cache);
 

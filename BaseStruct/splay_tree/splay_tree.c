@@ -276,23 +276,13 @@ void splay_erase(splay_root_t *tree, struct splay_node *node)
     node->left = NULL;
     node->right = NULL;
     node->parent = NULL;
-    
-    // 如果提供了析构函数，调用它
-    if (tree->node_destructor) {
-        tree->node_destructor(node, tree->destructor_arg);
-    }
+    // 侵入式语义：仅断开拓扑，资源释放由调用方决定；统一在 splay_destroy 中析构
 }
 
 // 判断伸展树是否为空
 int splay_empty(const splay_root_t *tree) 
 {
     return tree->root == NULL;
-}
-
-// 清空伸展树（不释放节点内存）
-void splay_clear(splay_root_t *tree) 
-{
-    tree->root = NULL;
 }
 
 // 递归销毁伸展树节点
@@ -305,6 +295,11 @@ static void destroy_tree_recursive(splay_root_t *tree, struct splay_node *node)
     destroy_tree_recursive(tree, node->left);
     destroy_tree_recursive(tree, node->right);
     
+    // 先断开与子/父关系，避免析构期间访问树指针
+    node->left = NULL;
+    node->right = NULL;
+    node->parent = NULL;
+
     // 如果提供了析构函数，调用它
     if (tree->node_destructor) {
         tree->node_destructor(node, tree->destructor_arg);
@@ -355,9 +350,5 @@ void splay_replace(splay_root_t *tree,
     old_node->left = NULL;
     old_node->right = NULL;
     old_node->parent = NULL;
-    
-    // 如果提供了析构函数，调用它
-    if (tree->node_destructor) {
-        tree->node_destructor(old_node, tree->destructor_arg);
-    }
+    // 侵入式语义：替换不负责释放旧节点，交由调用方或 destroy 统一处理
 }

@@ -3,6 +3,15 @@
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
+#include <string.h>
+
+static char *xstrdup(const char *s) {
+    size_t n = strlen(s);
+    char *p = (char *)malloc(n + 1);
+    if (!p) return NULL;
+    memcpy(p, s, n + 1);
+    return p;
+}
 
 // 示例结构：整数节点
 struct int_node {
@@ -13,6 +22,7 @@ struct int_node {
 // 整数比较函数
 int compare_int(const struct avl_node *a, const struct avl_node *b, void *arg) 
 {
+    (void)arg; // 未使用的比较额外参数
     struct int_node *node_a = avl_entry(a, struct int_node, node);
     struct int_node *node_b = avl_entry(b, struct int_node, node);
     
@@ -22,7 +32,9 @@ int compare_int(const struct avl_node *a, const struct avl_node *b, void *arg)
 // 整数节点析构函数
 void int_destructor(struct avl_node *node, void *arg)
 {
+    (void)arg; // 未使用的析构额外参数
     struct int_node *int_node = avl_entry(node, struct int_node, node);
+    (void)int_node; // 示例中未实际释放，避免未使用变量告警
     // 如果节点是动态分配的，这里可以释放它
     // free(int_node); 
     // 注：在本例中，节点是栈上分配的，不需要释放
@@ -37,6 +49,7 @@ struct string_node {
 // 字符串比较函数
 int compare_string(const struct avl_node *a, const struct avl_node *b, void *arg) 
 {
+    (void)arg; // 未使用的比较额外参数
     struct string_node *node_a = avl_entry(a, struct string_node, node);
     struct string_node *node_b = avl_entry(b, struct string_node, node);
     
@@ -46,6 +59,7 @@ int compare_string(const struct avl_node *a, const struct avl_node *b, void *arg
 // 字符串节点析构函数
 void string_destructor(struct avl_node *node, void *arg)
 {
+    (void)arg; // 未使用的析构额外参数
     struct string_node *str_node = avl_entry(node, struct string_node, node);
     if (str_node->str) {
         // 对于从堆上分配的字符串，需要释放内存
@@ -218,7 +232,7 @@ void test_string_tree()
     printf("插入顺序: ");
     for (int i = 0; i < 5; i++) {
         // 为字符串分配内存，析构函数将负责释放它
-        nodes[i].str = strdup(strings[i]);
+        nodes[i].str = xstrdup(strings[i]);
         printf("%s ", nodes[i].str);
         avl_insert(&tree, &nodes[i].node);
     }
@@ -308,12 +322,13 @@ void performance_test()
     printf("执行 100000 次随机查找: %f 秒\n", search_time);
     
     // 清理
+    // 销毁树（未提供析构函数时，仅断开树结构，不释放nodes数组元素内存）
+    avl_destroy(&tree);
     free(nodes);
-    // 明确清空树，不使用析构函数（因为我们传递的是NULL）
-    avl_clear(&tree);
 }
 // 析构函数，释放整个节点结构
 void heap_node_destructor(struct avl_node *node, void *arg) {
+    (void)arg; // 未使用的析构额外参数
     struct int_node *int_node = avl_entry(node, struct int_node, node);
     free(int_node);  // 释放整个节点
 }

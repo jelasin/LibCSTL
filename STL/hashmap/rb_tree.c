@@ -1,6 +1,6 @@
 /*
  * Linux内核风格红黑树实现
- * 完全基于 Linux Kernel lib/rbtree.c
+ * 基于 Linux Kernel lib/rbtree.c
  * 
  * 红黑树性质：
  * 1. 每个节点不是红色就是黑色
@@ -332,6 +332,7 @@ void __rb_erase(struct rb_node *node, struct rb_root *root)
     if (rebalance)
         ____rb_erase_color(rebalance, root, NULL);
 }
+
 
 /*
  * 查找函数实现

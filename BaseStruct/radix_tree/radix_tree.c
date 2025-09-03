@@ -444,43 +444,7 @@ int radix_erase(radix_root_t *tree, struct radix_leaf *leaf)
 	return 0;
 }
 
-static void clear_recursive(struct radix_node *n)
-{
-	if (!n) return;
-	struct radix_node *ch = n->first_child;
-	while (ch) {
-		struct radix_node *next = ch->next_sibling;
-		clear_recursive(ch);
-		ch = next;
-	}
-	if (n->label) free(n->label);
-	free(n);
-}
-
-void radix_clear(radix_root_t *tree)
-{
-	if (!tree || !tree->root) return;
-	// 不调用 leaf_destructor，但要把所有叶子 term 清空
-	// 深度优先遍历设置 leaf->term = NULL
-	struct radix_node *stack[128];
-	size_t top = 0;
-	stack[top++] = tree->root;
-	while (top) {
-		struct radix_node *n = stack[--top];
-		if (n->leaf) { n->leaf->term = NULL; n->leaf = NULL; }
-		for (struct radix_node *ch = n->first_child; ch; ch = ch->next_sibling) {
-			if (top < sizeof(stack)/sizeof(stack[0])) stack[top++] = ch;
-			else {
-				// 栈不够时改用递归释放以保证正确性
-				clear_recursive(n);
-				tree->root = NULL;
-				return;
-			}
-		}
-	}
-	clear_recursive(tree->root);
-	tree->root = NULL;
-}
+/* removed radix_clear: prefer radix_destroy to avoid leak-prone semantics */
 
 static void destroy_recursive(radix_root_t *tree, struct radix_node *n)
 {
@@ -491,8 +455,13 @@ static void destroy_recursive(radix_root_t *tree, struct radix_node *n)
 		ch = next;
 	}
 	if (n->leaf) {
-		if (tree->leaf_destructor) tree->leaf_destructor(n->leaf, tree->destructor_arg);
-		else n->leaf->term = NULL; // 若无析构，至少断开
+		// 由库负责断开关联，用户析构仅关注资源释放
+		struct radix_leaf *lf = n->leaf;
+		lf->term = NULL;
+		if (tree->leaf_destructor) {
+			tree->leaf_destructor(lf, tree->destructor_arg);
+		}
+		n->leaf = NULL;
 	}
 	radix_node_free(n);
 }

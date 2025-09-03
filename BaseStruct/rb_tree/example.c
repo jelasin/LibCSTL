@@ -145,7 +145,11 @@ void test_kernel_style_api()
     
     // 删除节点25 (nodes[1])
     printf("Deleting node 25 (nodes[1])...\n");
-    __rb_erase(&nodes[1].node, &root);
+    // 使用兼容层接口删除：构造临时包装以复用 rb_erase
+    rb_root_t tmp_tree; rb_init(&tmp_tree, compare_int, NULL, NULL, NULL);
+    tmp_tree.root = root; /* 复制底层root */
+    rb_erase(&tmp_tree, &nodes[1].node);
+    root = tmp_tree.root; /* 回写变更 */
     
     printf("Tree after deleting 25:\n");
     print_tree_structure(root.rb_node, 0, 'R');
@@ -158,7 +162,9 @@ void test_kernel_style_api()
     
     // 删除节点75 (nodes[2])
     printf("Deleting node 75 (nodes[2])...\n");
-    __rb_erase(&nodes[2].node, &root);
+    tmp_tree.root = root;
+    rb_erase(&tmp_tree, &nodes[2].node);
+    root = tmp_tree.root;
     
     printf("Tree after deleting 75:\n");
     print_tree_structure(root.rb_node, 0, 'R');

@@ -74,9 +74,6 @@ extern struct splay_node *splay_prev(const struct splay_node *node);
 // 判断伸展树是否为空
 extern int splay_empty(const splay_root_t *tree);
 
-// 清空伸展树（不释放节点内存）
-extern void splay_clear(splay_root_t *tree);
-
 // 销毁伸展树（递归释放所有节点内存）
 extern void splay_destroy(splay_root_t *tree);
 

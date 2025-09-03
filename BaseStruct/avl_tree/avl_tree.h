@@ -75,9 +75,6 @@ extern struct avl_node *avl_prev(const struct avl_node *node);
 // 判断AVL树是否为空
 extern int avl_empty(const avl_root_t *tree);
 
-// 清空AVL树（不释放节点内存）
-extern void avl_clear(avl_root_t *tree);
-
 // 销毁AVL树（递归释放所有节点内存）
 extern void avl_destroy(avl_root_t *tree);
 
@@ -94,8 +91,8 @@ extern int avl_balance_factor(const struct avl_node *node);
 
 // 中序遍历宏（不会修改树结构）
 #define avl_inorder(pos, tree, type, member) \
-    for (pos = avl_entry(avl_first(tree), type, member); \
-         &pos->member != NULL; \
-         pos = avl_entry(avl_next(&pos->member), type, member))
+    for (struct avl_node *__cur = avl_first(tree); \
+         __cur && ((pos) = avl_entry(__cur, type, member), 1); \
+         __cur = avl_next(__cur))
 
 #endif // __AVL_TREE_H__
